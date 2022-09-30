@@ -29,10 +29,14 @@ public class TodoAPI {
         get("/todos", (req, res) -> gson.toJson(todos.values()));
         // Get one
         get("todos/:id", (req, res) -> {
+            Long id = null;
             try {
-                Long id = Long.valueOf(req.params(":id"));
-            } catch ()
+                id = Long.valueOf(req.params(":id"));
+            } catch (NumberFormatException e) {
+                return "The id \"" + req.params(":id") + "\" is not a number!";
             }
+            if (!todos.containsKey(id))
+                return "Todo with the id \"" + id +  "\" not found!";
             return gson.toJson(todos.get(id));
         });
 
@@ -46,13 +50,23 @@ public class TodoAPI {
         });
 
         put("/todos/:id", (req, res) -> {
-            Long id = Long.valueOf(req.params(":id"));
+            Long id = null;
+            try {
+                id = Long.valueOf(req.params(":id"));
+            } catch (NumberFormatException e) {
+                return "The id \"" + req.params(":id") + "\" is not a number!";
+            }
+
+            if (!todos.containsKey(id))
+                return "Todo with the id \"" + id + "\" not found!";
             todos.put(id, gson.fromJson(req.body(), Todo.class));
             return gson.toJson(todos.get(id));
         });
 
         delete("/todos/:id", (req, res) -> {
             Long id = Long.valueOf(req.params(":id"));
+            if (!todos.containsKey(id))
+                return "Todo with the id \"" + id  + "\" not found!";
             todos.remove(id);
             return gson.toJson(todos.get(id));
         });
