@@ -33,7 +33,7 @@ public class TodoAPI {
             try {
                 id = Long.valueOf(req.params(":id"));
             } catch (NumberFormatException e) {
-                return "The id \"" + req.params(":id") + "\" is not a number!";
+                return String.format("The id \"%s\" is not a number!", req.params(":id"));
             }
             if (!todos.containsKey(id))
                 return "Todo with the id \"" + id +  "\" not found!";
@@ -54,7 +54,7 @@ public class TodoAPI {
             try {
                 id = Long.valueOf(req.params(":id"));
             } catch (NumberFormatException e) {
-                return "The id \"" + req.params(":id") + "\" is not a number!";
+                return String.format("The id \"%s\" is not a number!", req.params(":id"));
             }
 
             if (!todos.containsKey(id))
@@ -64,9 +64,14 @@ public class TodoAPI {
         });
 
         delete("/todos/:id", (req, res) -> {
-            Long id = Long.valueOf(req.params(":id"));
+            Long id = null;
+            try {
+                id = Long.valueOf(req.params(":id"));
+            } catch (NumberFormatException e) {
+                return String.format("The id \"%s\" is not a number!", req.params(":id"));
+            }
             if (!todos.containsKey(id))
-                return "Todo with the id \"" + id  + "\" not found!";
+                return "Todo with the id \"" + id + "\" not found!";
             todos.remove(id);
             return gson.toJson(todos.get(id));
         });
