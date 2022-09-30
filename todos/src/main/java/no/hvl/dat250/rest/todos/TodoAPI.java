@@ -26,10 +26,13 @@ public class TodoAPI {
         after((req, res) -> res.type("application/json"));
         // TODO: Implement API, such that the testcases succeed.
         // Get all
-        get("/todos", (req, res) -> gson.toJson(todos));
+        get("/todos", (req, res) -> gson.toJson(todos.values()));
         // Get one
         get("todos/:id", (req, res) -> {
-            Long id = Long.valueOf(req.params(":id"));
+            try {
+                Long id = Long.valueOf(req.params(":id"));
+            } catch ()
+            }
             return gson.toJson(todos.get(id));
         });
 
@@ -48,5 +51,10 @@ public class TodoAPI {
             return gson.toJson(todos.get(id));
         });
 
+        delete("/todos/:id", (req, res) -> {
+            Long id = Long.valueOf(req.params(":id"));
+            todos.remove(id);
+            return gson.toJson(todos.get(id));
+        });
     }
 }
